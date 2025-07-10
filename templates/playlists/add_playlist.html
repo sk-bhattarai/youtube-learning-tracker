@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add New Learning Playlist{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'users:dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        Add New Playlist
+                    </li>
+                </ol>
+            </nav>
+
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h1 class="h3 mb-4">Add New Learning Playlist</h1>
+
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        {% if messages %}
+                        <div class="messages mb-4">
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="mb-4">
+                            <label for="playlistUrl" class="form-label">YouTube Playlist URL</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fab fa-youtube text-danger"></i>
+                                </span>
+                                <input type="url" class="form-control" id="playlistUrl" name="playlist_url"
+                                       placeholder="https://www.youtube.com/playlist?list=..." required>
+                            </div>
+                            <div class="form-text">
+                                Paste the URL of any public YouTube playlist
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="targetDays" class="form-label">How many days to complete?</label>
+                            <input type="number" class="form-control" id="targetDays" name="target_days" 
+                                   min="1" value="30" required>
+                            <div class="form-text">
+                                Number of days you plan to take to complete this playlist
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Add Playlist
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tips Card -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h3 class="h6 mb-3">
+                        <i class="fas fa-lightbulb text-warning me-2"></i>Tips for Success
+                    </h3>
+                    <ul class="mb-0 ps-3">
+                        <li>Make sure the playlist is public</li>
+                        <li>Set realistic completion goals</li>
+                        <li>Break down longer playlists into manageable chunks</li>
+                        <li>Take notes while watching to improve retention</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.needs-validation .form-control:invalid {
+    border-color: #dc3545;
+}
+.needs-validation .form-control:valid {
+    border-color: #198754;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    
+    form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    });
+});
+</script>
+{% endblock %} 

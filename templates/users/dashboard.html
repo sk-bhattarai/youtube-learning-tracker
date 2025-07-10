@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - YouTube Learning Tracker{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Welcome Section -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="h2 mb-3">Welcome back, {{ user.username }}!</h1>
+            <div class="streak-counter mb-3">
+                <i class="fas fa-fire streak-icon"></i>
+                <span id="streak-counter">{{ streak.current_streak }}</span> day streak
+            </div>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <a href="{% url 'playlists:add_playlist' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add New Playlist
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="stats-grid mb-5">
+        <div class="stat-card">
+            <i class="fas fa-list-check text-primary mb-3 display-4"></i>
+            <div class="stat-number">{{ daily_goal.videos_completed }}</div>
+            <div class="text-muted">Videos Completed Today</div>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-trophy text-warning mb-3 display-4"></i>
+            <div class="stat-number">{{ streak.longest_streak }}</div>
+            <div class="text-muted">Longest Streak</div>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-book-reader text-success mb-3 display-4"></i>
+            <div class="stat-number">{{ playlists.count }}</div>
+            <div class="text-muted">Active Playlists</div>
+        </div>
+    </div>
+
+    <!-- Today's Learning -->
+    <div class="card shadow-sm mb-5">
+        <div class="card-header bg-white">
+            <h2 class="h5 mb-0">Today's Learning Plan</h2>
+        </div>
+        <div class="card-body">
+            {% if daily_goal.videos_planned > 0 %}
+                <div class="progress mb-3" style="height: 10px;">
+                    <div class="progress-bar" role="progressbar" 
+                         style="width: {% widthratio daily_goal.videos_completed daily_goal.videos_planned 100 %}%"
+                         aria-valuenow="{{ daily_goal.videos_completed }}"
+                         aria-valuemin="0"
+                         aria-valuemax="{{ daily_goal.videos_planned }}">
+                    </div>
+                </div>
+                <p class="mb-4">
+                    Completed {{ daily_goal.videos_completed }} of {{ daily_goal.videos_planned }} videos today
+                </p>
+            {% else %}
+                <p class="text-muted">No learning goals set for today. Start a playlist to begin!</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Your Playlists -->
+    <h2 class="h4 mb-4">Your Learning Playlists</h2>
+    {% if playlists %}
+        <div class="playlist-grid">
+            {% for playlist in playlists %}
+                <div class="playlist-card fade-in">
+                    <img src="{{ playlist.thumbnail_url }}" alt="{{ playlist.title }}" class="playlist-thumbnail">
+                    <div class="p-3">
+                        <h3 class="h6 mb-2">{{ playlist.title }}</h3>
+                        <div class="progress mb-2" style="height: 5px;">
+                            <div class="progress-bar" role="progressbar" 
+                                 style="width: {{ playlist.get_progress_percentage }}%">
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                {{ playlist.get_progress_percentage|floatformat:1 }}% Complete
+                            </small>
+                            <a href="{% url 'playlists:playlist_detail' pk=playlist.pk %}" 
+                               class="btn btn-sm btn-outline-primary">
+                                Continue Learning
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <i class="fas fa-folder-open text-muted display-4"></i>
+            </div>
+            <h3 class="h5 mb-3">No Playlists Yet</h3>
+            <p class="text-muted mb-4">Start by adding a YouTube playlist to begin your learning journey.</p>
+            <a href="{% url 'playlists:add_playlist' %}" class="btn btn-primary">
+                Add Your First Playlist
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Learning Time Reminder -->
+{% if user.preferred_learning_time %}
+    <div id="learning-time" data-time="{{ user.preferred_learning_time|time:'H:i' }}" hidden></div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize progress tracking
+    document.addEventListener('DOMContentLoaded', function() {
+        const progressTracker = new ProgressTracker();
+        progressTracker.loadStreak();
+    });
+</script>
+{% endblock %} 

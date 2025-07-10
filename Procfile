@@ -1,0 +1,1 @@
+web: gunicorn learning_tracker.wsgi:application --log-file - 

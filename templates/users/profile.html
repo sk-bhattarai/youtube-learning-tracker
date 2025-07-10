@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Profile Settings{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body p-5">
+                    <h1 class="h3 mb-4">Profile Settings</h1>
+                    
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="mb-4 text-center">
+                            {% if user.profile_photo %}
+                                <img src="{{ user.profile_photo.url }}" alt="Profile Photo" 
+                                     class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                            {% else %}
+                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mb-3 mx-auto"
+                                     style="width: 150px; height: 150px;">
+                                    <i class="fas fa-user-circle fa-5x text-muted"></i>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="mb-3">
+                                <label for="profile_photo" class="form-label">Profile Photo</label>
+                                <input type="file" class="form-control" id="profile_photo" name="profile_photo" 
+                                       accept="image/*">
+                                <div class="form-text">Upload a square image for best results</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   value="{{ user.username }}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   value="{{ user.email }}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="preferred_learning_time" class="form-label">Preferred Learning Time</label>
+                            <input type="time" class="form-control" id="preferred_learning_time" 
+                                   name="preferred_learning_time" value="{{ user.preferred_learning_time|time:'H:i' }}">
+                            <div class="form-text">When would you like to receive learning reminders?</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="notification_enabled" 
+                                       name="notification_enabled" {% if user.notification_enabled %}checked{% endif %}>
+                                <label class="form-check-label" for="notification_enabled">
+                                    Enable notifications
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h3 class="h5 mb-3">
+                        <i class="fas fa-shield-alt text-primary me-2"></i>Security
+                    </h3>
+                    <p class="text-muted mb-3">Manage your account security settings</p>
+                    <a href="{% url 'account_change_password' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-key me-2"></i>Change Password
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const photoInput = document.getElementById('profile_photo');
+    
+    form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    });
+    
+    photoInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.querySelector('.rounded-circle');
+                if (img) {
+                    img.src = e.target.result;
+                } else {
+                    const newImg = document.createElement('img');
+                    newImg.src = e.target.result;
+                    newImg.alt = 'Profile Photo';
+                    newImg.className = 'rounded-circle mb-3';
+                    newImg.style = 'width: 150px; height: 150px; object-fit: cover;';
+                    const placeholder = document.querySelector('.rounded-circle.bg-light');
+                    placeholder.replaceWith(newImg);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+});
+</script>
+{% endblock %} 

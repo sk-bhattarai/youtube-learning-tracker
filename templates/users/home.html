@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Welcome to YouTube Learning Tracker{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --purple: #6C63FF;
+        --green: #00C896;
+        --orange: #FF6B6B;
+        --yellow: #FFD93D;
+        --blue: #4E67EB;
+    }
+
+    .hero-section {
+        background: linear-gradient(135deg, var(--purple) 0%, #4A45B5 100%);
+        padding: 80px 0;
+        color: white;
+    }
+
+    .feature-card {
+        padding: 24px;
+        border-radius: 12px;
+        border: none;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-card.purple {
+        border-top: 4px solid var(--purple);
+    }
+
+    .feature-card.green {
+        border-top: 4px solid var(--green);
+    }
+
+    .feature-card.orange {
+        border-top: 4px solid var(--orange);
+    }
+
+    .feature-icon.purple {
+        color: var(--purple);
+    }
+
+    .feature-icon.green {
+        color: var(--green);
+    }
+
+    .feature-icon.orange {
+        color: var(--orange);
+    }
+
+    .feature-icon {
+        font-size: 2rem;
+        margin-bottom: 16px;
+    }
+
+    .steps-section {
+        background: #f8f9fa;
+        padding: 60px 0;
+    }
+
+    .step-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 16px;
+    }
+
+    .step-1 .step-number { color: var(--purple); }
+    .step-2 .step-number { color: var(--green); }
+    .step-3 .step-number { color: var(--orange); }
+    .step-4 .step-number { color: var(--yellow); }
+
+    .cta-section {
+        background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+        padding: 60px 0;
+        margin-top: 60px;
+        color: white;
+    }
+
+    .btn-custom-light {
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--purple);
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-custom-light:hover {
+        background: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-outline-custom {
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        color: white;
+        background: transparent;
+    }
+
+    .btn-outline-custom:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: white;
+        color: white;
+    }
+
+    .btn-cta {
+        background: var(--yellow);
+        color: #2D3436;
+        border: none;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-cta:hover {
+        background: #FFE16D;
+        color: #2D3436;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container text-center">
+        <h1 class="display-4 mb-4">Learn Better with YouTube</h1>
+        <p class="lead mb-4">Track your progress, maintain streaks, and achieve your learning goals.</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'account_signup' %}" class="btn btn-custom-light btn-lg">
+                Get Started Free
+            </a>
+            <a href="#how-it-works" class="btn btn-outline-custom btn-lg">
+                Learn More
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card purple h-100">
+                    <div class="feature-icon purple">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Track Progress</h3>
+                    <p>Monitor your learning journey with visual progress tracking.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card green h-100">
+                    <div class="feature-icon green">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3>Build Streaks</h3>
+                    <p>Stay motivated by maintaining your daily learning streaks.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card orange h-100">
+                    <div class="feature-icon orange">
+                        <i class="fas fa-calendar"></i>
+                    </div>
+                    <h3>Set Goals</h3>
+                    <p>Create and achieve your personalized learning goals.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section id="how-it-works" class="steps-section">
+    <div class="container">
+        <h2 class="text-center mb-5">How It Works</h2>
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="text-center step-1">
+                    <div class="step-number">1</div>
+                    <h4>Sign Up</h4>
+                    <p>Create your free account</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center step-2">
+                    <div class="step-number">2</div>
+                    <h4>Add Playlist</h4>
+                    <p>Import YouTube playlists</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center step-3">
+                    <div class="step-number">3</div>
+                    <h4>Set Goals</h4>
+                    <p>Define learning targets</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center step-4">
+                    <div class="step-number">4</div>
+                    <h4>Start Learning</h4>
+                    <p>Track your progress</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Start Learning?</h2>
+        <a href="{% url 'account_signup' %}" class="btn btn-cta btn-lg">
+            Get Started Now
+        </a>
+    </div>
+</section>
+{% endblock %} 
